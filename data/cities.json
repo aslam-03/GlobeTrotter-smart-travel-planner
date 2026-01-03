@@ -1,0 +1,62 @@
+[
+    {
+        "id": "1",
+        "name": "Paris",
+        "country": "France",
+        "region": "Europe"
+    },
+    {
+        "id": "2",
+        "name": "London",
+        "country": "United Kingdom",
+        "region": "Europe"
+    },
+    {
+        "id": "3",
+        "name": "New York",
+        "country": "United States",
+        "region": "North America"
+    },
+    {
+        "id": "4",
+        "name": "Tokyo",
+        "country": "Japan",
+        "region": "Asia"
+    },
+    {
+        "id": "5",
+        "name": "Rome",
+        "country": "Italy",
+        "region": "Europe"
+    },
+    {
+        "id": "6",
+        "name": "Barcelona",
+        "country": "Spain",
+        "region": "Europe"
+    },
+    {
+        "id": "7",
+        "name": "Amsterdam",
+        "country": "Netherlands",
+        "region": "Europe"
+    },
+    {
+        "id": "8",
+        "name": "Dubai",
+        "country": "United Arab Emirates",
+        "region": "Middle East"
+    },
+    {
+        "id": "9",
+        "name": "Singapore",
+        "country": "Singapore",
+        "region": "Asia"
+    },
+    {
+        "id": "10",
+        "name": "Sydney",
+        "country": "Australia",
+        "region": "Oceania"
+    }
+]
