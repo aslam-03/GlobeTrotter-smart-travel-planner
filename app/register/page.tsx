@@ -178,31 +178,10 @@ export default function RegisterPage() {
 
         {/* Back to Home */}
         <div className="mt-6 text-center">
-          <Link href="/dashboard" className="text-purple-600 hover:text-purple-700 hover:underline text-sm font-medium">
-            ← Back to Dashboard
+          <Link href="/" className="text-purple-600 hover:text-purple-700 hover:underline text-sm font-medium">
+            ← Back to Home
           </Link>
         </div>
-      </div>
-    </div>
-  )
-}
-            />
-          </div>
-          
-          <button 
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-          >
-            Create Account
-          </button>
-        </form>
-        
-        <p className="mt-4 text-center text-gray-600">
-          Already have an account?{' '}
-          <Link href="/login" className="text-blue-600 hover:underline">
-            Login
-          </Link>
-        </p>
       </div>
     </div>
   )
