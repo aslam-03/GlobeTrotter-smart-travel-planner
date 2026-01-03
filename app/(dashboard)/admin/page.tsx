@@ -9,7 +9,10 @@ export default async function AdminPage() {
     // In a real app, check for ADMIN role. For hackathon, any logged in user can view stats or just specific users.
     // I'll allow it for now or check if email is admin@globetrotter.com if I wanted to be strict.
 
-    if (!user) return <div>Unauthorized</div>;
+    // @ts-ignore
+    if (!user || user.role !== 'ADMIN') {
+        return <div className="p-8 text-center text-red-500 font-bold">Unauthorized Access</div>;
+    }
 
     const stats = {
         totalUsers: await Prisma.user.count(),
