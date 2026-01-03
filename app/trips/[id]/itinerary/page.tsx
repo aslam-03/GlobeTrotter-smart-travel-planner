@@ -199,10 +199,11 @@ export default function ItineraryPage({ params }: { params: { id: string } }) {
                             {activity.type}
                           </span>
                         </div>
-                        <div className="text-sm text-gray-600 ml-[92px]">
-                           
-                          {activity.description && `  `}
-                        </div>
+                        {activity.description && (
+                          <div className="text-sm text-gray-600 ml-[92px]">
+                            {activity.description}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
