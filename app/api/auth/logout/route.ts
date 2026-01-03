@@ -1,8 +1,18 @@
-import { NextResponse } from 'next/server';
-import { deleteSession } from '@/lib/auth';
+import { NextResponse } from 'next/server'
 
 export async function POST() {
-    await deleteSession();
-    // Redirect to login after logout
-    return NextResponse.redirect(new URL('/login', process.env.NEXTAUTH_URL || 'http://localhost:3000'));
+  const response = NextResponse.json(
+    { success: true, message: 'Logged out successfully' },
+    { status: 200 }
+  )
+
+  // Clear the auth token cookie
+  response.cookies.set('auth-token', '', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 0
+  })
+
+  return response
 }

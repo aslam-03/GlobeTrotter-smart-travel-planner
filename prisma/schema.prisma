@@ -1,62 +1,103 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
+// User model - represents travelers using the platform
 model User {
-  id        String   @id @default(uuid())
+  id        Int      @id @default(autoincrement())
   email     String   @unique
-  password  String
-  name      String?
+  name      String
+  password  String?  // Optional for demo users
   createdAt DateTime @default(now())
-  role      String   @default("USER") // "ADMIN" or "USER"
+  updatedAt DateTime @updatedAt
+  
   trips     Trip[]
+  
+  @@map("users")
 }
 
+// Trip model - main travel planning entity
 model Trip {
-  id          String     @id @default(uuid())
-  title       String
-  description String?
+  id           Int       @id @default(autoincrement())
+  title        String
+  description  String?
+  startDate    DateTime
+  endDate      DateTime
+  totalBudget  Float
+  status       String    @default("planning") // planning, ongoing, completed
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  
+  userId       Int
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  destinations Destination[]
+  expenses     Expense[]
+  
+  @@map("trips")
+}
+
+// Destination model - cities/places within a trip
+model Destination {
+  id          Int      @id @default(autoincrement())
+  city        String
+  country     String
   startDate   DateTime
   endDate     DateTime
-  userId      String
-  user        User       @relation(fields: [userId], references: [id])
-  isPublic    Boolean    @default(false)
-  budget      Float?     // Estimated budget
-  stops       TripStop[]
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-}
-
-model TripStop {
-  id          String     @id @default(uuid())
-  tripId      String
-  trip        Trip       @relation(fields: [tripId], references: [id], onDelete: Cascade)
-  cityId      String     // Using string ID from a city dataset or name
-  cityName    String
-  arrivalDate DateTime
-  departureDate DateTime
-  order       Int        // Order in the itinerary
-  activities  Activity[]
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-}
-
-model Activity {
-  id          String   @id @default(uuid())
-  tripStopId  String
-  tripStop    TripStop @relation(fields: [tripStopId], references: [id], onDelete: Cascade)
-  name        String
-  description String?
-  cost        Float
-  currency    String   @default("USD")
-  duration    Int      // Duration in minutes
-  startTime   DateTime? // Optional scheduled time
+  notes       String?
+  order       Int      @default(0) // for sorting destinations in trip
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  
+  tripId      Int
+  trip        Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  
+  activities  Activity[]
+  
+  @@map("destinations")
+}
+
+// Activity model - things to do at each destination
+model Activity {
+  id            Int      @id @default(autoincrement())
+  name          String
+  description   String?
+  type          String   // sightseeing, adventure, culture, food, etc.
+  scheduledTime DateTime?
+  duration      Int?     // in minutes
+  cost          Float    @default(0)
+  priority      String   @default("medium") // high, medium, low
+  completed     Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  destinationId Int
+  destination   Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  
+  @@map("activities")
+}
+
+// Expense model - budget tracking for trips
+model Expense {
+  id          Int      @id @default(autoincrement())
+  category    String   // transport, accommodation, food, activities, shopping, other
+  description String
+  amount      Float
+  date        DateTime
+  currency    String   @default("USD")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  tripId      Int
+  trip        Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  
+  @@map("expenses")
 }

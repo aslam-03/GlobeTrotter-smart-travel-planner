@@ -1,54 +1,86 @@
-import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
-import { getCurrentUser } from '@/lib/auth';
+import { NextRequest, NextResponse } from 'next/server'
+import { prisma } from '@/lib/prisma'
 
-export async function POST(request: Request) {
-    try {
-        const user = await getCurrentUser();
-        if (!user) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+// Hardcoded default user ID (from seed data)
+const DEFAULT_USER_ID = 1
+
+// GET /api/trips - Get all trips
+export async function GET() {
+  try {
+    const trips = await prisma.trip.findMany({
+      where: {
+        userId: DEFAULT_USER_ID
+      },
+      include: {
+        destinations: true,
+        expenses: true,
+        _count: {
+          select: {
+            destinations: true,
+            expenses: true
+          }
         }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    })
 
-        const json = await request.json();
-        const { title, startDate, endDate, description, isPublic } = json;
-
-        const trip = await prisma.trip.create({
-            data: {
-                title,
-                startDate: new Date(startDate),
-                endDate: new Date(endDate),
-                description,
-                isPublic: isPublic || false,
-                userId: user.id
-            }
-        });
-
-        return NextResponse.json(trip);
-    } catch (error) {
-        console.error('Error creating trip:', error);
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
-    }
+    return NextResponse.json({
+      success: true,
+      count: trips.length,
+      trips
+    })
+  } catch (error) {
+    console.error('Error fetching trips:', error)
+    return NextResponse.json(
+      { success: false, error: 'Failed to fetch trips' },
+      { status: 500 }
+    )
+  }
 }
 
-export async function GET(request: Request) {
-    try {
-        const user = await getCurrentUser();
-        if (!user) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-        }
+// POST /api/trips - Create a new trip
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json()
+    const { title, description, startDate, endDate, totalBudget, status } = body
 
-        const trips = await prisma.trip.findMany({
-            where: { userId: user.id },
-            orderBy: { startDate: 'desc' },
-            include: {
-                _count: {
-                    select: { stops: true }
-                }
-            }
-        });
-
-        return NextResponse.json(trips);
-    } catch (error) {
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    // Basic validation
+    if (!title || !startDate || !endDate || !totalBudget) {
+      return NextResponse.json(
+        { success: false, error: 'Missing required fields: title, startDate, endDate, totalBudget' },
+        { status: 400 }
+      )
     }
+
+    // Create trip
+    const trip = await prisma.trip.create({
+      data: {
+        title,
+        description: description || null,
+        startDate: new Date(startDate),
+        endDate: new Date(endDate),
+        totalBudget: parseFloat(totalBudget),
+        status: status || 'planning',
+        userId: DEFAULT_USER_ID
+      },
+      include: {
+        destinations: true,
+        expenses: true
+      }
+    })
+
+    return NextResponse.json({
+      success: true,
+      trip
+    }, { status: 201 })
+
+  } catch (error) {
+    console.error('Error creating trip:', error)
+    return NextResponse.json(
+      { success: false, error: 'Failed to create trip' },
+      { status: 500 }
+    )
+  }
 }
