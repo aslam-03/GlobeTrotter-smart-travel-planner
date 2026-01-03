@@ -1,0 +1,103 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// User model - represents travelers using the platform
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  password  String?  // Optional for demo users
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  trips     Trip[]
+  
+  @@map("users")
+}
+
+// Trip model - main travel planning entity
+model Trip {
+  id           Int       @id @default(autoincrement())
+  title        String
+  description  String?
+  startDate    DateTime
+  endDate      DateTime
+  totalBudget  Float
+  status       String    @default("planning") // planning, ongoing, completed
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  
+  userId       Int
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  destinations Destination[]
+  expenses     Expense[]
+  
+  @@map("trips")
+}
+
+// Destination model - cities/places within a trip
+model Destination {
+  id          Int      @id @default(autoincrement())
+  city        String
+  country     String
+  startDate   DateTime
+  endDate     DateTime
+  notes       String?
+  order       Int      @default(0) // for sorting destinations in trip
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  tripId      Int
+  trip        Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  
+  activities  Activity[]
+  
+  @@map("destinations")
+}
+
+// Activity model - things to do at each destination
+model Activity {
+  id            Int      @id @default(autoincrement())
+  name          String
+  description   String?
+  type          String   // sightseeing, adventure, culture, food, etc.
+  scheduledTime DateTime?
+  duration      Int?     // in minutes
+  cost          Float    @default(0)
+  priority      String   @default("medium") // high, medium, low
+  completed     Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  destinationId Int
+  destination   Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  
+  @@map("activities")
+}
+
+// Expense model - budget tracking for trips
+model Expense {
+  id          Int      @id @default(autoincrement())
+  category    String   // transport, accommodation, food, activities, shopping, other
+  description String
+  amount      Float
+  date        DateTime
+  currency    String   @default("USD")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  tripId      Int
+  trip        Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  
+  @@map("expenses")
+}
