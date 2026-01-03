@@ -48,8 +48,8 @@ export default function Navbar() {
     }
   }
 
-  // Hide navbar on login/register pages
-  if (pathname === '/login' || pathname === '/register') {
+  // Hide navbar on landing page, login, and register pages
+  if (pathname === '/' || pathname === '/login' || pathname === '/register') {
     return null
   }
 

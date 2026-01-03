@@ -1,8 +1,19 @@
 ﻿'use client'
 
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import { useState } from 'react'
 import { useTrips } from '../../../context/TripsContext'
+
+// Import Map with SSR disabled
+const Map = dynamic(() => import('../../../components/Map'), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[400px] bg-gray-100 rounded-lg flex items-center justify-center">
+      <p className="text-gray-500">Loading map...</p>
+    </div>
+  )
+})
 
 export default function ItineraryPage({ params }: { params: { id: string } }) {
   const { getTrip, getTripCityStops, addCityStop, addActivity } = useTrips()
@@ -136,6 +147,27 @@ export default function ItineraryPage({ params }: { params: { id: string } }) {
           >
             Add City
           </button>
+        </div>
+      )}
+      
+      {/* Trip Route Map */}
+      {cityStops.length > 0 && (
+        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+          <h2 className="text-xl font-bold text-gray-800 mb-4">📍 Your Trip Route</h2>
+          <Map 
+            destinations={cityStops.map(stop => ({
+              id: stop.id,
+              city: stop.city,
+              country: stop.country || 'Unknown',
+              startDate: stop.startDate,
+              endDate: stop.endDate,
+              order: stop.order
+            }))} 
+            height="400px"
+          />
+          <p className="text-xs text-gray-500 mt-3 text-center">
+            🗺️ Interactive map showing your journey • Numbers indicate city order
+          </p>
         </div>
       )}
       

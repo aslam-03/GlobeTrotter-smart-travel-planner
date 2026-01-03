@@ -1,7 +1,18 @@
 'use client'
 
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import { useTrips } from '../../context/TripsContext'
+
+// Import Map with SSR disabled (Leaflet requires window object)
+const Map = dynamic(() => import('../../components/Map'), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[500px] bg-gray-100 rounded-lg flex items-center justify-center">
+      <p className="text-gray-500">Loading map...</p>
+    </div>
+  )
+})
 
 export default function TripDetailPage({ params }: { params: { id: string } }) {
   const { getTrip, getTripCityStops } = useTrips()
@@ -62,6 +73,27 @@ export default function TripDetailPage({ params }: { params: { id: string } }) {
         <div className="bg-white rounded-lg shadow p-6 mb-6">
           <h2 className="text-xl font-bold text-gray-800 mb-3">About This Trip</h2>
           <p className="text-gray-700">{trip.description}</p>
+        </div>
+      )}
+      
+      {/* Interactive Map */}
+      {cityStops.length > 0 && (
+        <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">Trip Route Map</h2>
+          <Map 
+            destinations={cityStops.map(stop => ({
+              id: stop.id,
+              city: stop.city,
+              country: stop.country || 'Unknown',
+              startDate: stop.startDate,
+              endDate: stop.endDate,
+              order: stop.order
+            }))} 
+            height="500px"
+          />
+          <p className="text-xs text-gray-500 mt-3 text-center">
+            📌 Click on markers to see destination details • Route shown as dashed line
+          </p>
         </div>
       )}
       

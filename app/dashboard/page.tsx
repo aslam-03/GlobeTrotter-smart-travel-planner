@@ -31,7 +31,8 @@ export default function DashboardPage() {
   }
   
   return (
-    <div className="container mx-auto px-4 py-8 max-w-7xl">
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
       {/* Hero Section with Gradient Background */}
       <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl shadow-2xl p-8 md:p-12 mb-10 text-white">
         <h1 className="text-4xl md:text-5xl font-bold mb-3">Welcome to GlobeTrotter! 🌍</h1>
@@ -158,6 +159,7 @@ export default function DashboardPage() {
             <p className="opacity-90">Connect with travelers</p>
           </Link>
         </div>
+      </div>
       </div>
     </div>
   )

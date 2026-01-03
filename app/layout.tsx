@@ -21,9 +21,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <Navbar />
         <TripsProvider>
-          <main className="min-h-screen bg-gray-50">
-            {children}
-          </main>
+          {children}
         </TripsProvider>
         <footer className="bg-gray-800 text-white py-8 mt-16">
           <div className="container mx-auto px-4 text-center">
