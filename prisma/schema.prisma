@@ -9,13 +9,15 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  password  String
-  name      String?
-  createdAt DateTime @default(now())
-  role      String   @default("USER") // "ADMIN" or "USER"
-  trips     Trip[]
+  id                String   @id @default(uuid())
+  email             String   @unique
+  password          String
+  name              String?
+  createdAt         DateTime @default(now())
+  role              String   @default("USER") // "ADMIN" or "USER"
+  trips             Trip[]
+  resetToken        String?  @unique
+  resetTokenExpiry  DateTime?
 }
 
 model Trip {

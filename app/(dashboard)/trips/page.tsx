@@ -1,17 +1,16 @@
 import Link from 'next/link';
-import { Plus, Calendar, MapPin, Search } from 'lucide-react';
+import { Plus, Search } from 'lucide-react';
 import prisma from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
+import TripCard from '@/components/TripCard';
 
 export const dynamic = 'force-dynamic';
 
 export default async function TripsPage() {
     const user = await getCurrentUser();
-
     if (!user) {
         return <div>Unauthorized</div>;
     }
-
     const trips = await prisma.trip.findMany({
         where: { userId: user.id },
         orderBy: { startDate: 'desc' },
@@ -38,35 +37,7 @@ export default async function TripsPage() {
             {trips.length > 0 ? (
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                     {trips.map((trip: any) => (
-                        <Link
-                            key={trip.id}
-                            href={`/trips/${trip.id}/itinerary`}
-                            className="group relative flex flex-col overflow-hidden rounded-lg border bg-card shadow-sm hover:shadow-md transition-all hover:scale-105"
-                        >
-                            <div className="aspect-video bg-muted relative">
-                                <div className="absolute inset-0 flex items-center justify-center text-muted-foreground bg-gray-100">
-                                    <MapPin className="h-10 w-10 opacity-20" />
-                                </div>
-                                {trip.isPublic && (
-                                    <span className="absolute top-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded-full backdrop-blur-sm">Public</span>
-                                )}
-                            </div>
-                            <div className="flex flex-1 flex-col p-4">
-                                <h3 className="font-semibold tracking-tight text-lg">{trip.title}</h3>
-                                <p className="text-sm text-muted-foreground line-clamp-2 mt-2 mb-4">
-                                    {trip.description || "No description provided."}
-                                </p>
-                                <div className="mt-auto flex items-center justify-between text-sm text-muted-foreground">
-                                    <div className="flex items-center gap-1">
-                                        <Calendar className="h-3 w-3" />
-                                        {new Date(trip.startDate).toLocaleDateString()}
-                                    </div>
-                                    <div>
-                                        {trip._count.stops} Stops
-                                    </div>
-                                </div>
-                            </div>
-                        </Link>
+                        <TripCard key={trip.id} trip={trip} />
                     ))}
                 </div>
             ) : (
