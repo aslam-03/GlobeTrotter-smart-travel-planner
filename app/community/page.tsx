@@ -131,7 +131,7 @@ export default function CommunityPage() {
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
-            💰 Budget Friendly (&lt; $3000)
+            💰 Budget Friendly (< $3000)
           </button>
           <button
             onClick={() => setFilter('luxury')}
