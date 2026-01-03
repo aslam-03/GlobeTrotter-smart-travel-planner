@@ -9,6 +9,24 @@ export default function LoginPage() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
+    const [showForgot, setShowForgot] = useState(false);
+    const [forgotEmail, setForgotEmail] = useState('');
+    const [forgotStatus, setForgotStatus] = useState('');
+
+    async function handleForgotPassword(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        setForgotStatus('');
+        const res = await fetch('/api/auth/forgot-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: forgotEmail }),
+        });
+        if (res.ok) {
+            setForgotStatus('Password reset link sent to your email.');
+        } else {
+            setForgotStatus('Failed to send reset link.');
+        }
+    }
 
     async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -76,7 +94,7 @@ export default function LoginPage() {
                             <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                                 Password
                             </label>
-                            <div className="mt-1">
+                            <div className="mt-1 flex justify-between items-center">
                                 <input
                                     id="password"
                                     name="password"
@@ -85,6 +103,13 @@ export default function LoginPage() {
                                     required
                                     className="block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-primary focus:outline-none focus:ring-primary sm:text-sm"
                                 />
+                                <button
+                                    type="button"
+                                    className="text-xs text-primary ml-2 hover:underline"
+                                    onClick={() => setShowForgot(true)}
+                                >
+                                    Forgot Password?
+                                </button>
                             </div>
                         </div>
 
@@ -129,6 +154,28 @@ export default function LoginPage() {
                         </div>
                     </div>
                 </div>
+                {showForgot && (
+                    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+                        <div className="bg-white p-6 rounded shadow-lg w-full max-w-sm">
+                            <h3 className="text-lg font-bold mb-2">Reset Password</h3>
+                            <form onSubmit={handleForgotPassword} className="space-y-3">
+                                <input
+                                    type="email"
+                                    required
+                                    placeholder="Enter your email"
+                                    value={forgotEmail}
+                                    onChange={e => setForgotEmail(e.target.value)}
+                                    className="w-full p-2 border rounded"
+                                />
+                                <div className="flex gap-2 justify-end">
+                                    <button type="button" onClick={() => setShowForgot(false)} className="text-muted-foreground hover:text-foreground">Cancel</button>
+                                    <button type="submit" className="bg-primary text-primary-foreground px-3 py-1 rounded">Send Link</button>
+                                </div>
+                            </form>
+                            {forgotStatus && <div className="mt-2 text-sm text-primary">{forgotStatus}</div>}
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

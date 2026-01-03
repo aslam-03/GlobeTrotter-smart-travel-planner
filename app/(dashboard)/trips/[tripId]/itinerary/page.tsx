@@ -40,6 +40,14 @@ export default function ItineraryPage({ params }: { params: { tripId: string } }
         }
     }
 
+    async function handleRemoveStop(stopId: string) {
+        await fetch(`/api/trips/${params.tripId}/stops/${stopId}`, {
+            method: 'DELETE',
+        });
+        fetchStops();
+        router.refresh();
+    }
+
     async function handleSearch(query: string) {
         setSearchQuery(query);
         if (query.length > 2) {
@@ -169,7 +177,12 @@ export default function ItineraryPage({ params }: { params: { tripId: string } }
                                         {new Date(stop.arrivalDate).toLocaleDateString()} - {new Date(stop.departureDate).toLocaleDateString()}
                                     </div>
                                 </div>
-                                {/* Actions like delete/edit would go here */}
+                                <button
+                                    onClick={() => handleRemoveStop(stop.id)}
+                                    className="text-red-500 hover:underline ml-2 text-sm"
+                                >
+                                    Remove
+                                </button>
                             </div>
 
                             <div className="mt-4">

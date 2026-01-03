@@ -9,13 +9,31 @@ datasource db {
 }
 
 model User {
+  id                String   @id @default(uuid())
+  email             String   @unique
+  password          String
+  name              String?
+  photo             String?
+  language          String   @default("en")
+  createdAt         DateTime @default(now())
+  role              String   @default("USER") // "ADMIN" or "USER"
+  trips             Trip[]
+  savedDestinations SavedDestination[]
+  resetToken        String?  @unique
+  resetTokenExpiry  DateTime?
+}
+
+model SavedDestination {
   id        String   @id @default(uuid())
-  email     String   @unique
-  password  String
-  name      String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cityId    String
+  cityName  String
+  country   String
+  region    String
   createdAt DateTime @default(now())
-  role      String   @default("USER") // "ADMIN" or "USER"
-  trips     Trip[]
+
+  @@unique([userId, cityId])
 }
 
 model Trip {
