@@ -97,6 +97,7 @@ export default function ItineraryPage({ params }: { params: { id: string } }) {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-6">
+        <Link href={`/trips/${params.id}`} className="text-blue-600 hover:underline mb-2 inline-block">
         <Link href={`/trips/`} className="text-blue-600 hover:underline mb-2 inline-block">
           ← Back to Trip Details
         </Link>
