@@ -5,3 +5,11 @@ prisma/dev.db-journal
 *.log
 
 /app/generated/prisma
+
+# Next.js build outputs
+/.next/
+/out/
+
+# TypeScript build info
+*.tsbuildinfo
+tsconfig.tsbuildinfo
