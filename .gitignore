@@ -1,3 +1,8 @@
 node_modules
 
 /app/generated/prisma
+
+# Build artifacts
+.next
+tsconfig.tsbuildinfo
+.eslintrc.json

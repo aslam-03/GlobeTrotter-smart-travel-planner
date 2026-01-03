@@ -195,7 +195,7 @@ export default function ItineraryPage({ params }: { params: { id: string } }) {
                         <div className="flex items-center mb-1">
                           <span className="font-semibold text-gray-600 mr-3 min-w-[80px]">{activity.time}</span>
                           <h4 className="font-semibold text-lg">{activity.name}</h4>
-                          <span className={`ml-2 px-2 py-1 rounded text-xs `}>
+                          <span className={`ml-2 px-2 py-1 rounded text-xs ${typeColors[activity.type] || 'bg-gray-100 text-gray-800'}`}>
                             {activity.type}
                           </span>
                         </div>
