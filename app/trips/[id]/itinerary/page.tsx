@@ -294,10 +294,10 @@ export default function ItineraryPage({ params }: { params: { id: string } }) {
           <h3 className="font-bold text-lg mb-3">Need inspiration?</h3>
           <div className="flex gap-4">
             <Link href="/search/cities" className="text-blue-600 hover:underline">
-               Browse Cities
+               ← Browse Cities
             </Link>
             <Link href="/search/activities" className="text-blue-600 hover:underline">
-               Find Activities
+               ← Find Activities
             </Link>
           </div>
         </div>
