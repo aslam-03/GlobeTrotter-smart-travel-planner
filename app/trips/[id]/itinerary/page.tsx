@@ -43,7 +43,7 @@ export default function ItineraryPage({ params }: { params: { id: string } }) {
         <div className="text-center">
           <h1 className="text-3xl font-bold text-gray-800 mb-4">Trip Not Found</h1>
           <Link href="/trips" className="text-blue-600 hover:underline">
-             Back to Trips
+            ← Back to Trips
           </Link>
         </div>
       </div>
@@ -97,8 +97,8 @@ export default function ItineraryPage({ params }: { params: { id: string } }) {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-6">
-        <Link href={`/trips/`} className="text-blue-600 hover:underline mb-2 inline-block">
-           Back to Trip Details
+        <Link href={`/trips/${params.id}`} className="text-blue-600 hover:underline mb-2 inline-block">
+          ← Back to Trip Details
         </Link>
         <h1 className="text-4xl font-bold text-gray-800 mb-2">Itinerary Builder</h1>
         <p className="text-gray-600">{trip.title}  {formatDate(trip.startDate)} - {formatDate(trip.endDate)}</p>
@@ -195,14 +195,15 @@ export default function ItineraryPage({ params }: { params: { id: string } }) {
                         <div className="flex items-center mb-1">
                           <span className="font-semibold text-gray-600 mr-3 min-w-[80px]">{activity.time}</span>
                           <h4 className="font-semibold text-lg">{activity.name}</h4>
-                          <span className={`ml-2 px-2 py-1 rounded text-xs `}>
+                          <span className={`ml-2 px-2 py-1 rounded text-xs ${typeColors[activity.type] || 'bg-gray-100 text-gray-800'}`}>
                             {activity.type}
                           </span>
                         </div>
-                        <div className="text-sm text-gray-600 ml-[92px]">
-                           
-                          {activity.description && `  `}
-                        </div>
+                        {activity.description && (
+                          <div className="text-sm text-gray-600 ml-[92px]">
+                            {activity.description}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -294,10 +295,10 @@ export default function ItineraryPage({ params }: { params: { id: string } }) {
           <h3 className="font-bold text-lg mb-3">Need inspiration?</h3>
           <div className="flex gap-4">
             <Link href="/search/cities" className="text-blue-600 hover:underline">
-               Browse Cities
+              → Browse Cities
             </Link>
             <Link href="/search/activities" className="text-blue-600 hover:underline">
-               Find Activities
+              → Find Activities
             </Link>
           </div>
         </div>
