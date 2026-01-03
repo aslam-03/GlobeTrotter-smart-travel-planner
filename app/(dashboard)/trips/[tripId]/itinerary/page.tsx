@@ -173,7 +173,7 @@ export default function ItineraryPage({ params }: { params: { tripId: string } }
                             </div>
 
                             <div className="mt-4">
-                                <h4 className="text-sm font-semibold mb-2 uppercase tracking-wider text-muted-foreground text-xs">Activities</h4>
+                                <h4 className="font-semibold mb-2 uppercase tracking-wider text-muted-foreground text-xs">Activities</h4>
                                 {stop.activities && stop.activities.length > 0 ? (
                                     <ul className="space-y-2">
                                         {stop.activities.map((activity: any) => (

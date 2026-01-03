@@ -125,6 +125,7 @@ export default function LoginPage() {
                             >
                                 Create an account
                             </Link>
+
                         </div>
                     </div>
                 </div>

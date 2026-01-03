@@ -27,11 +27,14 @@ export async function POST(request: Request) {
 
         const hashedPassword = await hashPassword(password);
 
+        const role = email === 'admin@globetrotter.com' ? 'ADMIN' : 'USER';
+
         const user = await prisma.user.create({
             data: {
                 email,
                 password: hashedPassword,
                 name,
+                role,
             },
         });
 

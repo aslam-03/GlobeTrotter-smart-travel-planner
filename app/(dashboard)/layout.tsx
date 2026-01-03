@@ -12,11 +12,15 @@ import {
     User
 } from 'lucide-react';
 
-export default function DashboardLayout({
+import { getCurrentUser } from '@/lib/auth';
+
+export default async function DashboardLayout({
     children,
 }: {
     children: React.ReactNode
 }) {
+    const user = await getCurrentUser();
+
     return (
         <div className="flex min-h-screen bg-background text-foreground">
             {/* Sidebar */}
@@ -53,6 +57,23 @@ export default function DashboardLayout({
                     </div>
 
                     <div className="space-y-1 border-t pt-4">
+                        {/* Admin Link - Only visible to ADMIN role */}
+                        {/* Note: In a client component we'd use useSession, but this is a server component layout (mostly).
+                            However, to access user role dynamically here we need to fetch it.
+                            The layout is valid as server component.
+                        */}
+                        {/*
+                            Actually DashboardLayout is imported in app/(dashboard)/layout.tsx.
+                            Wait, the file content of layout.tsx provided earlier shows it's a default export function DashboardLayout.
+                            To check role, we need to make it async and await getCurrentUser().
+                        */}
+                        {/* @ts-ignore */}
+                        {user?.role === 'ADMIN' && (
+                            <Link href="/admin" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary hover:bg-muted">
+                                <CreditCard className="h-5 w-5" /> {/* Using CreditCard as an example icon */}
+                                <span>Admin Dashboard</span>
+                            </Link>
+                        )}
                         <Link href="/profile" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary hover:bg-muted">
                             <Settings className="h-5 w-5" />
                             <span>Settings</span>
