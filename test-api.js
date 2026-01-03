@@ -59,7 +59,7 @@ async function testGetTripById(id) {
 
 async function runTests() {
   console.log('🚀 Starting GlobeTrotter API Tests...')
-  console.log('=' . repeat(50))
+  console.log('='.repeat(50))
   
   // Test 1: Get all trips
   await testGetAllTrips()
